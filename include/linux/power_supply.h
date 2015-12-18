@@ -32,6 +32,23 @@ struct device;
  * space. Unused/unknown fields will not appear in sysfs.
  */
 
+enum smb358_chg_temp{
+	SMB358_CHG_TEMP_PRESENT = 0,
+	SMB358_CHG_TEMP_COLD,
+	SMB358_CHG_TEMP_COOL,
+	SMB358_CHG_TEMP_LITTLE_COOL,
+	SMB358_CHG_TEMP_NORMAL,
+	SMB358_CHG_TEMP_WARM,
+	SMB358_CHG_TEMP_HOT,
+};
+
+enum smb358_charge_timeout{
+	TIME_382MIN = 0,
+	TIME_764MIN,
+	TIME_1527MIN,
+	TIME_DISABLED,
+};
+
 enum {
 	POWER_SUPPLY_STATUS_UNKNOWN = 0,
 	POWER_SUPPLY_STATUS_CHARGING,

@@ -495,4 +495,10 @@ config QPNP_BMS
 	  Say Y here to enable support for QPNP chip bms device.
 	  It registers a fuelgauge bms power supply to report
 	  State of Charge.
+
+config OPPO_SMB358
+	bool "enable external charger IC SMB358 for Oppo devices"
+	help
+	  Say Y to enable external charger IC SMB358.
+
 endif # POWER_SUPPLY
