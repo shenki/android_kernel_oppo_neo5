@@ -49,6 +49,11 @@
 #define MAX_AF_ITERATIONS 3
 #define MAX_NUMBER_OF_STEPS 47
 
+typedef enum sensor_stats_type {
+  YRGB,
+  YYYY,
+} sensor_stats_type_t;
+
 enum flash_type {
 	LED_FLASH = 1,
 	STROBE_FLASH,
@@ -322,6 +327,7 @@ struct msm_sensor_info_t {
 	char sensor_name[MAX_SENSOR_NAME];
 	int32_t    session_id;
 	int32_t     subdev_id[SUB_MODULE_MAX];
+	unsigned char     module_vendor_id;
 };
 
 struct camera_vreg_t {
@@ -352,11 +358,17 @@ struct msm_sensor_init_params {
 	uint32_t            sensor_mount_angle;
 };
 
+struct msm_yuv_info {
+	uint32_t exp_time;
+	uint32_t iso;
+};
+
 struct sensorb_cfg_data {
 	int cfgtype;
 	union {
 		struct msm_sensor_info_t      sensor_info;
 		struct msm_sensor_init_params sensor_init_params;
+		struct msm_yuv_info yuv_info;
 		void                         *setting;
 	} cfg;
 };
@@ -435,6 +447,7 @@ enum msm_sensor_cfg_type_t {
 	CFG_SET_WHITE_BALANCE,
 	CFG_SET_AUTOFOCUS,
 	CFG_CANCEL_AUTOFOCUS,
+	CFG_GET_YUV_INFO,
 };
 
 enum msm_actuator_cfg_type_t {
@@ -443,6 +456,7 @@ enum msm_actuator_cfg_type_t {
 	CFG_SET_DEFAULT_FOCUS,
 	CFG_SET_POSITION,
 	CFG_MOVE_FOCUS,
+	CFG_ACTUATOR_POWERDOWN,
 };
 
 enum actuator_type {
@@ -484,6 +498,7 @@ struct msm_actuator_move_params_t {
 	int8_t sign_dir;
 	int16_t dest_step_pos;
 	int32_t num_steps;
+	uint16_t curr_lens_pos;
 	struct damping_params_t *ringing_params;
 };
 
