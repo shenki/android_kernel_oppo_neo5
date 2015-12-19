@@ -579,9 +579,8 @@ static int32_t msm_actuator_init(struct msm_actuator_ctrl_t *a_ctrl,
 				a_ctrl->i2c_data_type,
 				init_settings);
 			kfree(init_settings);
-			if (rc < 0) {
+			if (rc < 0)
 				pr_err("Error actuator_init_focus\n");
-			}
 		}
 	}
 
@@ -626,7 +625,6 @@ static int32_t msm_actuator_config(struct msm_actuator_ctrl_t *a_ctrl,
 		cdata->cfg.cam_name = a_ctrl->cam_name;
 			CDBG("lxl .cam_name = 1\n");
 		}
-
 		break;
 
 	case CFG_SET_ACTUATOR_INFO:

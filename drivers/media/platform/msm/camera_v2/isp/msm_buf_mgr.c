@@ -334,9 +334,8 @@ static int msm_isp_get_buf(struct msm_isp_buf_mgr *buf_mgr, uint32_t id,
 			bufq->session_id, bufq->stream_id);
 		if (vb2_buf) {
 			if (vb2_buf->v4l2_buf.index < bufq->num_bufs) {
-
-						*buf_info = &bufq->bufs[vb2_buf->v4l2_buf.index];
-						(*buf_info)->vb2_buf = vb2_buf;
+				*buf_info = &bufq->bufs[vb2_buf->v4l2_buf.index];
+				(*buf_info)->vb2_buf = vb2_buf;
 			} else {
 				pr_err("%s: Incorrect buf index %d\n",
 					__func__, vb2_buf->v4l2_buf.index);
