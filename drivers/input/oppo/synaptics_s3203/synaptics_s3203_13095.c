@@ -1984,71 +1984,72 @@ static int synatpitcs_ts_update(struct i2c_client *client)
 	return 0;
 }
 
-static  void get_tp_id(int TP_ID1,int TP_ID2,int TP_ID3)
+static void get_tp_id(int tp_id1, int tp_id2, int tp_id3)
 {
-	int ret,id1 = -1,id2 = -1,id3 = -1;
-	if(TP_ID1  >= 0)
-	{
-		ret = gpio_request(TP_ID1,"TP_ID1");
-		if(!ret){
+	int ret, id1 = -1, id2 = -1, id3 = -1;
+
+	if (tp_id1 >= 0) {
+		ret = gpio_request(tp_id1, "tp_id1");
+		if(!ret) {
 			ret = gpio_tlmm_config(GPIO_CFG(
-					TP_ID1, 0,
+					tp_id1, 0,
+					GPIO_CFG_INPUT,
+					GPIO_CFG_PULL_UP,
+					GPIO_CFG_2MA),
+					GPIO_CFG_ENABLE);
+		}
+		/* TODO: Move the msleep and get values to the bottom for all
+		 * three GPIOs, and only msleep once. */
+		msleep(100);
+		id1 = gpio_get_value(tp_id1);
+	}
+
+	if (tp_id2 >= 0) {
+		ret = gpio_request(tp_id2,"tp_id2");
+		if(!ret) {
+			ret = gpio_tlmm_config(GPIO_CFG(
+					tp_id2, 0,
 					GPIO_CFG_INPUT,
 					GPIO_CFG_PULL_UP,
 					GPIO_CFG_2MA),
 					GPIO_CFG_ENABLE);
 		}
 		msleep(100);
-	   id1=gpio_get_value(TP_ID1);
+		id2 = gpio_get_value(tp_id2);
 	}
 
-	if(TP_ID2  >=  0)
-	{
-		ret = gpio_request(TP_ID2,"TP_ID2");
-		if(!ret){
-		ret = gpio_tlmm_config(GPIO_CFG(
-				TP_ID2, 0,
-				GPIO_CFG_INPUT,
-				GPIO_CFG_PULL_UP,
-				GPIO_CFG_2MA),
-				GPIO_CFG_ENABLE);
-		msleep(100);
-		id2=gpio_get_value(TP_ID2);
-		}
-	}
-
-	if(TP_ID3  >= 0)
-	{
-		ret = gpio_request(TP_ID3,"TP_ID3");
-		if(!ret){
+	if (tp_id3 >= 0) {
+		ret = gpio_request(tp_id3,"tp_id3");
+		if (!ret) {
 			ret = gpio_tlmm_config(GPIO_CFG(
-					TP_ID3, 0,
+					tp_id3, 0,
 					GPIO_CFG_INPUT,
 					GPIO_CFG_PULL_UP,
 					GPIO_CFG_2MA),
 					GPIO_CFG_ENABLE);
 		}
 		msleep(100);
-		id3=gpio_get_value(TP_ID3);
+		id3 = gpio_get_value(tp_id3);
 	}
 
 	TPDTM_DMESG("%s::id1:%d id2:%d id3:%d\n",__func__,id1,id2,id3);
 
+	/* TODO: Put the three values into an int, and then we can have a
+	 * switch statement on 0..3 */
 
-		if((id1==0)&&(id2==0)&&(id3==0)) {
-			TPDTM_DMESG("%s::TRULY\n",__func__);
-			tp_dev=TP_TRULY;
-		}else if((id1 == 1)&&(id2 == 1)&&(id3 == 0)){
-			tp_dev= TP_TRULY_NITTO;
-		}else if((id1 == 1)&&(id2 == 0)&&(id3 == 0)){
-			tp_dev= TP_OFILM_NITTO;
-		}else if((id1 == 0)&&(id2 == 1)&&(id3 == 1)){
-			tp_dev= TP_OFILM_HG;
-		}
-		else {
-			TPDTM_DMESG("%s::OFILM \n",__func__);
-			tp_dev=TP_OFILM;
-	   }
+	if ((id1 == 0) && (id2 == 0) && (id3 == 0)) {
+		TPDTM_DMESG("%s::TRULY\n",__func__);
+		tp_dev=TP_TRULY;
+	} else if ((id1 == 1) && (id2 == 1) && (id3 == 0)) {
+		tp_dev = TP_TRULY_NITTO;
+	} else if ((id1 == 1) && (id2 == 0) && (id3 == 0)) {
+		tp_dev = TP_OFILM_NITTO;
+	} else if ((id1 == 0) && (id2 == 1) && (id3 == 1)) {
+		tp_dev = TP_OFILM_HG;
+	} else {
+		TPDTM_DMESG("%s::OFILM \n",__func__);
+		tp_dev = TP_OFILM;
+	}
 }
 
 static int synaptics_parse_dts(struct device *dev,struct synaptics_ts_data *ts)
