@@ -11,7 +11,7 @@
 ** Author: Yixue.Ge@BasicDrv.TP
 **
 ** --------------------------- Revision History: --------------------------------
-** 	<author>	<data>			<desc>
+**	<author>	<data>			<desc>
 ** Tong.han@BasicDrv.TP 1/01/2014 migrating code from 13059(MTK) to 13095(Qcom)
 ************************************************************************************/
 #include <linux/of_gpio.h>
@@ -346,7 +346,7 @@ static struct device_attribute attrs_oppo[] = {
 static ssize_t cap_vk_show(struct kobject *kobj, struct kobj_attribute *attr,char *buf){
       /* LEFT: search: CENTER: menu ,home:search 412, RIGHT: BACK */
 	return sprintf(buf,
-        	__stringify(EV_KEY) ":" __stringify(KEY_MENU)   ":%d:%d:%d:%d"
+		__stringify(EV_KEY) ":" __stringify(KEY_MENU)   ":%d:%d:%d:%d"
         ":" __stringify(EV_KEY) ":" __stringify(KEY_HOMEPAGE)   ":%d:%d:%d:%d"
         ":" __stringify(EV_KEY) ":" __stringify(KEY_BACK)   ":%d:%d:%d:%d"
         "\n",LCD_WIDTH/6,button_map[2],button_map[0],button_map[1],LCD_WIDTH/2,button_map[2],button_map[0],button_map[1],LCD_WIDTH*5/6,button_map[2],button_map[0],button_map[1]);
@@ -538,7 +538,7 @@ static int synaptics_read_register_map(struct synaptics_ts_data *ts)
 	int ret;
 
 	memset(buf, 0, sizeof(buf));
-   	ret = i2c_smbus_write_byte_data(ts->client, 0xff, 0x0);
+	ret = i2c_smbus_write_byte_data(ts->client, 0xff, 0x0);
 	if (ret < 0) {
 		TPD_DEBUG("synaptics_read_register_map: failed for page select\n");
 		return -1;
@@ -1066,7 +1066,7 @@ static void int_touch(struct synaptics_ts_data *ts)
 			        5, &(buf[0]));
 			if (ret < 0) {
 				TPD_ERR("synaptics_int_touch: i2c_transfer failed\n");
-	        	return;
+			return;
 			}
 			points.x = (buf[0]<<4) | (buf[2] & 0x0f);
 			points.raw_x = buf[3]&0x0f;
@@ -1405,7 +1405,7 @@ static ssize_t tp_baseline_show(struct device_driver *ddri, char *buf)
 			printk("%d,",delta_baseline[x][y]);
 			num_read_chars += sprintf(&(buf[num_read_chars]), "%d ",delta_baseline[x][y]);
 		}
-   	}
+	}
 	ret = i2c_smbus_write_byte_data(ts_g->client,F54_ANALOG_COMMAND_BASE,0X02);
     delay_qt_ms(60);
 
@@ -1468,7 +1468,7 @@ static ssize_t tp_baseline_show_with_cbc(struct device_driver *ddri, char *buf)
 			printk("%d,",delta_baseline[x][y]);
 			num_read_chars += sprintf(&(buf[num_read_chars]), "%d ",delta_baseline[x][y]);
 		}
-   	}
+	}
 
 	ret = i2c_smbus_write_byte_data(ts_g->client,F54_ANALOG_COMMAND_BASE,0X02);
     delay_qt_ms(60);
@@ -1627,7 +1627,7 @@ TEST_WITH_CBC_3203:
 			count++;
 		}
 	  printk("\n");
-   	}
+	}
 	if(!enable_cbc){
 		enable_cbc = 1;
 		TPD_ERR("test cbc baseline again\n");
@@ -1920,20 +1920,20 @@ static int synatpitcs_ts_update(struct i2c_client *client)
 
 
             if(tp_dev == TP_TRULY)
-            	i2c_smbus_write_byte_data(client,SynaF34Reflash_BlockData+i,
-			      						 TRULY_Firmware_Data_14013[j*16+i]);
+		i2c_smbus_write_byte_data(client,SynaF34Reflash_BlockData+i,
+									 TRULY_Firmware_Data_14013[j*16+i]);
 			if(tp_dev == TP_OFILM)
                 i2c_smbus_write_byte_data(client,SynaF34Reflash_BlockData+i,
-	    	      						OFILM_Firmware_Data_14013[j*16+i]);
+								OFILM_Firmware_Data_14013[j*16+i]);
             if(tp_dev == TP_TRULY_NITTO)
-            	i2c_smbus_write_byte_data(client,SynaF34Reflash_BlockData+i,
-			      						 TRULY_NITTO_Firmware_Data_14013[j*16+i]);
+		i2c_smbus_write_byte_data(client,SynaF34Reflash_BlockData+i,
+									 TRULY_NITTO_Firmware_Data_14013[j*16+i]);
 			if(tp_dev == TP_OFILM_NITTO)
                 i2c_smbus_write_byte_data(client,SynaF34Reflash_BlockData+i,
-	    	      						OFILM_NITTO_Firmware_Data_14013[j*16+i]);
+								OFILM_NITTO_Firmware_Data_14013[j*16+i]);
 		    if(tp_dev == TP_OFILM_HG)
                 i2c_smbus_write_byte_data(client,SynaF34Reflash_BlockData+i,
-	    	      						OFILM_Firmware_Data_14013[j*16+i]);
+								OFILM_Firmware_Data_14013[j*16+i]);
 
 	}
 
@@ -2286,18 +2286,18 @@ static int synaptics_ts_probe(
 		if(CURRENT_FIRMWARE_ID == FIRMWARE_ID)
 		{
 			printk("CURRENT_FIRMWARE_ID = 0x%x,FIRMWARE_ID_TRULY = 0x%x/n",CURRENT_FIRMWARE_ID,FIRMWARE_ID);
-		  	goto after_fw_update;
+			goto after_fw_update;
 		}
 fw_update:
 			synatpitcs_ts_update(ts->client);
 
 		synaptics_read_register_map(ts);
- 		i2c_smbus_read_i2c_block_data(ts->client, F34_FLASH_CTRL00, 4, buf);
- 		CURRENT_FIRMWARE_ID = (buf[0]<<24)|(buf[1]<<16)|(buf[2]<<8)|buf[3];
- 		fw_cnt++;
- 		printk("after FW upate times fw_cnt = %d\n\
- 			, CURRENT_FIRMWARE_ID2 = %x,\n",fw_cnt,CURRENT_FIRMWARE_ID);
- 	    TP_FW=CURRENT_FIRMWARE_ID;
+		i2c_smbus_read_i2c_block_data(ts->client, F34_FLASH_CTRL00, 4, buf);
+		CURRENT_FIRMWARE_ID = (buf[0]<<24)|(buf[1]<<16)|(buf[2]<<8)|buf[3];
+		fw_cnt++;
+		printk("after FW upate times fw_cnt = %d\n\
+			, CURRENT_FIRMWARE_ID2 = %x,\n",fw_cnt,CURRENT_FIRMWARE_ID);
+	    TP_FW=CURRENT_FIRMWARE_ID;
 	}
 
 after_fw_update:
@@ -2315,17 +2315,17 @@ after_fw_update:
 	if(ret) {
 		TPD_ERR("failed to read product info \n");
 	}
-   	/*read max_x ,max_y*/
+	/*read max_x ,max_y*/
 	ret = i2c_smbus_write_byte_data(ts->client, 0xff, 0x0);
 	if (ret < 0) {
 		TPD_ERR("i2c_smbus_write_byte_data failed for page select\n");
 	}
 		ret = i2c_smbus_read_word_data(ts->client, F11_2D_CTRL06);
-   		 if(ret > 0)
-	  		ts->max_x = ret&0xffff;
-   		 ret = i2c_smbus_read_word_data(ts->client, F11_2D_CTRL08);
-   		 if(ret > 0)
-	 	 	max_y_ic = ret&0xffff;
+		 if(ret > 0)
+			ts->max_x = ret&0xffff;
+		 ret = i2c_smbus_read_word_data(ts->client, F11_2D_CTRL08);
+		 if(ret > 0)
+			max_y_ic = ret&0xffff;
 	TPDTM_DMESG("max_x = %d,max_y = %d\n",ts->max_x,max_y_ic);
 
 	bootloader_mode = i2c_smbus_read_byte_data(ts->client,F01_RMI_DATA_BASE);
@@ -2333,7 +2333,7 @@ after_fw_update:
 	bootloader_mode = bootloader_mode&0x40;
 	TPDTM_DMESG("synaptics:afte fw update,program memory self-check = 0x%x\n",bootloader_mode);
 
- 	if((ts->max_x == 0)||(max_y_ic == 0)||(bootloader_mode == 0x40)){
+	if((ts->max_x == 0)||(max_y_ic == 0)||(bootloader_mode == 0x40)){
 		if(fw_cnt < 2) {
 			TPD_ERR("There is something terrible wrong \n Trying Update the Firmware again\n");
 			goto fw_update;
