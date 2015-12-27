@@ -57,9 +57,6 @@ static int LCD_HEIGHT ;
 #define SUPPORT_GLOVES_MODE
 #define SUPPORT_TP_SLEEP_MODE
 
-/******************for Red function*****************/
-#define CONFIG_SYNAPTIC_RED
-
 /*********************for gesture*******************/
 #ifdef SUPPORT_GESTURE
 	#define ENABLE_UNICODE  0x40
@@ -252,10 +249,8 @@ static irqreturn_t synaptics_ts_irq_handler(int irq,void *dev_id);
 #if defined(CONFIG_FB)
 static int fb_notifier_callback(struct notifier_block *self,unsigned long event,void *data);
 #endif
-#ifdef CONFIG_SYNAPTIC_RED
 extern void rmidev_remove_device(void);
 extern int rmidev_init_device(void);
-#endif
 
 /*-------------------------------Using Struct----------------------------------*/
 struct point_info {
@@ -2478,9 +2473,7 @@ shoud set the irq GPIO
 			goto err_sysfs;
 		}
 	}
-#ifdef CONFIG_SYNAPTIC_RED
 	rmidev_init_device();
-#endif
 	TPDTM_DMESG("synaptics_ts_probe: normal end\n");
 	tp_probe_ok=1;
 	return 0;
@@ -2508,9 +2501,7 @@ static int synaptics_ts_remove(struct i2c_client *client)
 {
 	int attr_count;
 	struct synaptics_ts_data *ts = i2c_get_clientdata(client);
-#ifdef CONFIG_SYNAPTIC_RED
 	rmidev_remove_device();
-#endif
 #if defined(CONFIG_FB)
 	if (fb_unregister_client(&ts->fb_notif))
 		dev_err(&client->dev, "Error occurred while unregistering fb_notifier.\n");
@@ -2725,13 +2716,12 @@ static int __init tpd_driver_init(void) {
 
 /* should never be called */
 static void __exit tpd_driver_exit(void) {
- 	i2c_del_driver(&tpd_i2c_driver);
+	i2c_del_driver(&tpd_i2c_driver);
 	if (synaptics_wq)
 		destroy_workqueue(synaptics_wq);
 	return;
 }
 
-#ifdef CONFIG_SYNAPTIC_RED
 int remote_rmi4_i2c_enable(bool enable)
 {
 	int ret = 0 ;
@@ -2787,17 +2777,16 @@ int remote_rmit_set_page(unsigned int address){
 int remote_rmit_put_page(unsigned int address)
 {
     int ret;
-   	ret = i2c_smbus_write_byte_data(ts_g->client, 0xff, 0x0);
+	ret = i2c_smbus_write_byte_data(ts_g->client, 0xff, 0x0);
 	if (ret < 0) {
 		TPD_DEBUG("%s: failed for page select\n",__func__);
 		return -1;
 	}
 	return ret;
 }
-#endif
+
 module_init(tpd_driver_init);
 module_exit(tpd_driver_exit);
 
 MODULE_DESCRIPTION("Synaptics S3203 Touchscreen Driver");
 MODULE_LICENSE("GPL");
-
