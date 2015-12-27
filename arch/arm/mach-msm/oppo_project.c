@@ -1,62 +1,60 @@
 
-#include <mach/oppo_project.h>
-#include "board-dt.h"
-#include <asm/uaccess.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/proc_fs.h>
-#include <mach/msm_smem.h>
-#include <mach/oppo_reserve3.h>
 #include <linux/fs.h>
 
-/////////////////////////////////////////////////////////////
+#include <mach/msm_smem.h>
+#include <mach/oppo_reserve3.h>
+#include <mach/oppo_project.h>
+#include <asm/uaccess.h>
+
+#include "board-dt.h"
+
 static struct proc_dir_entry *oppoVersion = NULL;
-static ProjectInfoCDTType *format = NULL;
-
-
+static struct ProjectInfoCDTType *format = NULL;
 
 unsigned int init_project_version(void)
 {
-	unsigned int len = (sizeof(ProjectInfoCDTType) + 3)&(~0x3);
+	unsigned int len = (sizeof(struct ProjectInfoCDTType) + 3) & ~0x3;
 
-	format = (ProjectInfoCDTType *)smem_alloc2(SMEM_PROJECT,len);
+	format = smem_alloc2(SMEM_PROJECT, len);
 
-	if(format)
+	if (format)
 		return format->nProject;
-
 	return 0;
 }
-
 
 unsigned int get_project(void)
 {
-	if(format)
+	if (format)
 		return format->nProject;
+
 	return 0;
 }
 
-unsigned int is_project(OPPO_PROJECT project )
+bool is_project(enum OPPO_PROJECT project)
 {
-	return (get_project() == project?1:0);
+	return get_project() == project;
 }
 
 unsigned char get_PCB_Version(void)
 {
-	if(format)
+	if (format)
 		return format->nPCBVersion;
 	return 0;
 }
 
 unsigned char get_Modem_Version(void)
 {
-	if(format)
+	if (format)
 		return format->nModem;
 	return 0;
 }
 
 unsigned char get_Operator_Version(void)
 {
-	if(format)
+	if (format)
 		return format->nOperator;
 	return 0;
 }

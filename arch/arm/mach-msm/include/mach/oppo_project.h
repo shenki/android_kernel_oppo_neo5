@@ -30,7 +30,6 @@ enum{
 	RF_VERSION__33,
 };
 
-
 #define GET_PCB_VERSION() (get_PCB_Version())
 #define GET_PCB_VERSION_STRING() (get_PCB_Version_String())
 
@@ -52,25 +51,18 @@ enum OPPO_OPERATOR {
 	OPERATOR_FOREIGN 			= 5,
 };
 
-typedef enum OPPO_PROJECT OPPO_PROJECT;
-
-typedef struct
-{
+struct ProjectInfoCDTType {
   unsigned int                  nProject;
   unsigned char                 nModem;
   unsigned char                 nOperator;
   unsigned char                 nPCBVersion;
-} ProjectInfoCDTType;
-
+};
 
 unsigned int init_project_version(void);
 unsigned int get_project(void);
-unsigned int is_project(OPPO_PROJECT project );
+bool is_project(enum OPPO_PROJECT project );
 unsigned char get_PCB_Version(void);
 unsigned char get_Modem_Version(void);
 unsigned char get_Operator_Version(void);
 
-//lcd gama flag
-int init_lcd_gamaflag(void);
-unsigned int get_lcd_gamaflag(void);
 #endif
